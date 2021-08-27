@@ -24,6 +24,8 @@ using namespace ROOT;
 using namespace ROOT::VecOps;
 using namespace dd4pod;
 
+TCanvas *CreateCanvas(TString name, Bool_t logx=0, Bool_t logy=0, Bool_t logz=0);
+
 int main(int argc, char** argv) {
 
   // setup
@@ -67,7 +69,7 @@ int main(int argc, char** argv) {
 
   // actions
   auto hitPositionHist = dfFinal.Histo2D(
-      { "hitPositions","dRICh hit positions (units=mm)",
+      { "hitPositions","dRICh hit positions (units=cm)",
       1000,-200,200, 1000,-200,200 },
       "hitX","hitY"
       );
@@ -80,18 +82,28 @@ int main(int argc, char** argv) {
 
   // execution
   TCanvas *canv;
-  canv = new TCanvas();
+  canv = CreateCanvas("hits",0,0,1);
   hitPositionHist->Draw("colz");
   hitPositionHist->GetXaxis()->SetRangeUser(100,200);
   hitPositionHist->GetYaxis()->SetRangeUser(-40,40);
-  canv->SetLogz();
   canv->Print(outfileN+"hits.png");
 
-  canv = new TCanvas();
+  canv = CreateCanvas("photon_yield");
   numHitsVsThrownP->Draw("box");
-  canv->Print(outfileN+"nums.png");
+  canv->Print(outfileN+"photon_count.png");
 
   cout << "\n\npress ^C to exit.\n\n";
   mainApp.Run();
   return 0;
 };
+
+
+TCanvas *CreateCanvas(TString name, Bool_t logx, Bool_t logy, Bool_t logz) {
+  TCanvas *c = new TCanvas("canv_"+name,"canv_"+name,800,600);
+  c->SetGrid(1,1);
+  if(logx) c->SetLogx(1);
+  if(logy) c->SetLogy(1);
+  if(logz) c->SetLogz(1);
+  return c;
+};
+

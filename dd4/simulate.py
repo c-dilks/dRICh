@@ -29,7 +29,7 @@ helpStr = f'''
                 2: inner edge test
                 3: outer edge test
                 4: radial scan test
-                5: azimuthal+radial scan test
+                5: azimuthal+radial scan test (one sector only)
                 6: spray pions in one sector
                 7: momentum scan
             optics tests:
@@ -48,7 +48,7 @@ helpStr = f'''
                 -n [numEvents]: number of events (usu. at each point)
                 -r: run, instead of visualize (default)
                 -v: visualize, instead of run
-                -o [output file]: output root file name (will appear in out/ directory)
+                -o [output file]: output root file name
                 -h: print help
     '''
 
@@ -155,9 +155,8 @@ if(testNum!=7): m.write(f'/gps/ene/mono {energy}\n')
 m.write(f'/gps/position 0 0 0 cm\n')
 
 ### define envelope acceptance limits [units=cm]
-padding = 5.0
-rMin = 19.0 + padding
-rMax = 200.0 - padding
+rMin = 19.0 + 15.0
+rMax = 200.0 - 10.0
 zMax = 335.0
 
 ### derived attributes
@@ -213,6 +212,8 @@ elif( testNum == 5 ):
         m.write(f'/vis/scene/endOfRunAction accumulate\n')
     for r in list(np.linspace(rMin,rMax,numRad)):
         for phi in list(np.linspace(0,2*math.pi,numPhi,endpoint=False)):
+            if(phi>math.pi/6 and phi<(2*math.pi-math.pi/6)): continue # restrict to one sector
+            print(phi*180/math.pi)
             x = r*math.cos(phi)
             y = r*math.sin(phi)
             m.write(f'/gps/direction {x} {y} {zMax}\n')
@@ -284,8 +285,8 @@ m.close()
 
 
 ### set output file
-if outputFileName=='': outputFileName = "sim_"+runType+".root"
-outputFile = workDir+"/out/"+outputFileName
+if outputFileName=='': outputFile = workDir+"/out/sim_"+runType+".root"
+else: outputFile = workDir+"/"+outputFileName
 
 ### simulation executable and arguments
 cmd = "npsim"

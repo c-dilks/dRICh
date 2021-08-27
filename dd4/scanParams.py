@@ -108,8 +108,12 @@ compactInFile.close()
 
 # comparisons
 # - centerX 210 vs. 220:
-#   sim-test__0.1__-40.0__2*.png
-#   sim-test__0.1__-50.0__2*.png
+#   sxiv out/iteration2/good/sim-test__0.1__-40.0__2*.png
+#   sxiv out/iteration2/good/sim-test__0.1__-50.0__2*.png
+#   - no difference in resolution for 210 vs. 220; 210 seems better since the rings are spread out more radially
+#   - some preference for centerZ=-40, radius=130
 # - retune:
-#   *__-40.0__220.0__130.0.png
-#   *__-50.0__220.0__140.0.png
+#   sxiv out/iteration2/sim-test__*__-40.0__210.0__130.0.png
+#   - no improvement on resolution; let's pick retune=0.1
+#
+
