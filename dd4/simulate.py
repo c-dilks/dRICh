@@ -42,8 +42,11 @@ helpStr = f'''
 
     OPTIONS:    -a: athena full simulation
                 -d: dRICh only (default)
-                -p [particle]: name of particle to throw
-                    - pi+
+                -p [particle]: name of particle to throw; some examples:
+                    - e- / e+
+                    - pi+ / pi-
+                    - kaon+ / kaon-
+                    - proton / anti_proton
                     - opticalphoton
                 -n [numEvents]: number of events (usu. at each point)
                 -r: run, instead of visualize (default)
@@ -127,9 +130,9 @@ if(runType=='vis'):
 
     m.write(f'/vis/sceneHandler/attach\n')
 
-    #m.write(f'/vis/viewer/set/viewpointThetaPhi 115 65\n') # angled view
+    m.write(f'/vis/viewer/set/viewpointThetaPhi 115 65\n') # angled view
     #m.write(f'/vis/viewer/set/viewpointThetaPhi 0 0\n') # front view
-    m.write(f'/vis/viewer/set/viewpointThetaPhi -90 -89\n') # top view
+    #m.write(f'/vis/viewer/set/viewpointThetaPhi -90 -89\n') # top view
     #m.write(f'/vis/viewer/set/viewpointThetaPhi 90 0\n') # side view
     #m.write(f'/vis/viewer/zoom 0.5\n')
     m.write(f'/vis/viewer/set/style wireframe\n')
@@ -157,7 +160,7 @@ m.write(f'/gps/position 0 0 0 cm\n')
 ### define envelope acceptance limits [units=cm]
 rMin = 19.0 + 15.0
 rMax = 200.0 - 10.0
-zMax = 335.0
+zMax = 325.0
 
 ### derived attributes
 thetaMin = math.atan2(rMin,zMax)
@@ -235,7 +238,7 @@ elif( testNum == 6 ):
 elif( testNum == 7 ):
     m.write(f'\n# momentum scan\n')
     m.write(f'/gps/direction 0.25 0.0 1.0\n')
-    for en in list(np.linspace(1,30,10)):
+    for en in list(np.linspace(1,60,10)):
         m.write(f'/gps/ene/mono {en} GeV\n')
         m.write(f'/run/beamOn {numEvents}\n')
 

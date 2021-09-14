@@ -22,6 +22,11 @@ using lvec = VecOps::RVec<Long64_t>;
 
 int main(int argc, char** argv) {
 
+  // arguments
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  TString infileN="out/sim_run.root";
+  if(argc>1) infileN = TString(argv[1]);
+
   // settings
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -44,7 +49,7 @@ int main(int argc, char** argv) {
   EnableImplicitMT();
 
   // read tree into dataframe
-  RDataFrame dfIn("events","out/sim_run.root");
+  RDataFrame dfIn("events",infileN.Data());
 
   // load sensor position LUT
   std::map<Long64_t,std::pair<Long64_t,Long64_t>> modCoordMap;

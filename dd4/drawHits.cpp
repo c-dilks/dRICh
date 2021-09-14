@@ -31,11 +31,12 @@ int main(int argc, char** argv) {
   // setup
   TString infileN="out/sim_run.root";
   if(argc>1) infileN = TString(argv[1]);
-  TApplication mainApp("mainApp",&argc,argv);
-  EnableImplicitMT();
+  //TApplication mainApp("mainApp",&argc,argv); // keep canvases open
+  //EnableImplicitMT();
   RDataFrame dfIn("events",infileN.Data());
   TString outfileN = infileN;
   outfileN(TRegexp("\\.root$"))=".";
+  TFile *outfile = new TFile(outfileN+"plots.root","RECREATE");
 
 
   /* lambdas
@@ -75,9 +76,9 @@ int main(int argc, char** argv) {
       );
   auto numHitsVsThrownP = dfFinal.Histo2D(
       { "numHitsVsThrownP","number of dRICh hits vs. thrown momentum", 
-      35,0,35, 100,0,100 },
+      65,0,65, 100,0,200 },
       "thrownP","numHits"
-      );
+      ); // TODO: cut opticalphotons (may not be needed, double check PID)
 
 
   // execution
@@ -87,13 +88,24 @@ int main(int argc, char** argv) {
   hitPositionHist->GetXaxis()->SetRangeUser(100,200);
   hitPositionHist->GetYaxis()->SetRangeUser(-40,40);
   canv->Print(outfileN+"hits.png");
-
+  canv->Write();
+  //
   canv = CreateCanvas("photon_yield");
   numHitsVsThrownP->Draw("box");
+  TProfile * aveHitsVsP;
+  aveHitsVsP = numHitsVsThrownP->ProfileX("_pfx",1,-1,"i"); // TODO: maybe not the right errors, see TProfile::BuildOptions `i`
+  aveHitsVsP->SetLineColor(kBlack);
+  aveHitsVsP->SetLineWidth(3);
+  aveHitsVsP->Draw("same");
   canv->Print(outfileN+"photon_count.png");
+  canv->Write();
+  aveHitsVsP->Write("aveHitsVsP");
+  outfile->Close();
 
-  cout << "\n\npress ^C to exit.\n\n";
-  mainApp.Run();
+
+  // exit
+  //cout << "\n\npress ^C to exit.\n\n";
+  //mainApp.Run(); // keep canvases open
   return 0;
 };
 
