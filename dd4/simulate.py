@@ -37,6 +37,8 @@ helpStr = f'''
                         ( recommend: optDbg=1 / mirDbg=0 / sensDbg=1 )
                 11:   focal point, broad range test
                         ( recommend: optDbg=1 / mirDbg=1 / sensDbg=1 )
+                12:   parallel-to-point focal test
+                        ( recommend: optDbg=1 / mirDbg=0 / sensDbg=0 )
 
 [OPTIONAL ARGUMENTS]
 
@@ -130,15 +132,15 @@ if(runType=='vis'):
 
     m.write(f'/vis/sceneHandler/attach\n')
 
-    m.write(f'/vis/viewer/set/viewpointThetaPhi 115 65\n') # angled view
+    #m.write(f'/vis/viewer/set/viewpointThetaPhi 115 65\n') # angled view
     #m.write(f'/vis/viewer/set/viewpointThetaPhi 0 0\n') # front view
-    #m.write(f'/vis/viewer/set/viewpointThetaPhi -90 -89\n') # top view
+    m.write(f'/vis/viewer/set/viewpointThetaPhi -90 -89\n') # top view
     #m.write(f'/vis/viewer/set/viewpointThetaPhi 90 0\n') # side view
     #m.write(f'/vis/viewer/zoom 0.5\n')
     m.write(f'/vis/viewer/set/style wireframe\n')
 
     m.write(f'/vis/modeling/trajectories/create/drawByCharge\n')
-    m.write(f'/vis/modeling/trajectories/drawByCharge-0/setRGBA 0 0.4 0 0 1\n')
+    m.write(f'/vis/modeling/trajectories/drawByCharge-0/setRGBA 0 0.8 0 0 1\n')
     m.write(f'/vis/modeling/trajectories/drawByCharge-0/setRGBA 1 0 0.5 0.5 1\n')
 
 
@@ -265,6 +267,18 @@ elif( testNum == 11 ):
     m.write(f'/gps/ang/minphi {math.pi} rad\n')
     m.write(f'/gps/ang/maxphi {math.pi+0.01} rad\n')
     m.write(f'/run/beamOn {numEvents}\n')
+
+elif( testNum == 12 ):
+    m.write(f'\n# opticalphoton parallel-to-point focusing\n')
+    m.write(f'/vis/scene/endOfEventAction accumulate\n')
+    m.write(f'/vis/scene/endOfRunAction accumulate\n')
+    m.write(f'/gps/pos/type Beam\n')
+    m.write(f'/gps/ang/type beam1d\n')
+    for rVal in list(np.linspace(rMin,rMax,5)): # number of beams within theta acceptance
+        m.write(f'/gps/ang/rot1 -{zMax} 0 {rVal}\n')
+        m.write(f'/gps/pos/rot1 -{zMax} 0 {rVal}\n')
+        m.write(f'/gps/pos/halfx 8 cm\n') # parallel beam width
+        m.write(f'/run/beamOn {numEvents}\n')
 
 else:
     print("ERROR: unknown test number\n")
