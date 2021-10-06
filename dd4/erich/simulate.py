@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# npsim wrapper with dRICh specific tests
+# npsim wrapper with eRICh specific tests
 
 import sys, getopt, os, re
 import subprocess, shlex
@@ -12,7 +12,7 @@ import numpy as np
 ################################################################
 
 testNum = -1 
-detector = 'drich'
+detector = 'erich'
 particle = 'pi+'
 runType = 'run'
 numEvents = 10
@@ -29,11 +29,11 @@ helpStr = f'''
                 2: inner edge test
                 3: outer edge test
                 4: radial scan test
-                5: azimuthal+radial scan test (one sector only)
+                5: azimuthal+radial scan test
                 6: spray pions in one sector
                 7: momentum scan
             optics tests:
-                10:   focal point, in dRICh acceptance
+                10:   focal point, in eRICh acceptance
                         ( recommend: optDbg=1 / mirDbg=0 / sensDbg=1 )
                 11:   focal point, broad range test
                         ( recommend: optDbg=1 / mirDbg=1 / sensDbg=1 )
@@ -43,7 +43,7 @@ helpStr = f'''
 [OPTIONAL ARGUMENTS]
 
     OPTIONS:    -a: athena full simulation
-                -d: dRICh only (default)
+                -d: eRICh only (default)
                 -p [particle]: name of particle to throw; some examples:
                     - e- / e+
                     - pi+ / pi-
@@ -67,7 +67,7 @@ except getopt.GetoptError:
 for opt, arg in opts:
     if(opt=='-t'): testNum = int(arg)
     if(opt=='-a'): detector = 'athena'
-    if(opt=='-d'): detector = 'drich'
+    if(opt=='-d'): detector = 'erich'
     if(opt=='-p'): particle = arg
     if(opt=='-n'): numEvents = int(arg)
     if(opt=='-r'): runType = 'run'
@@ -103,8 +103,8 @@ print(sep)
 ### set compact file
 if(detector=="athena"):
     compactFile='athena.xml'
-elif(detector=="drich"):
-    compactFile='compact/subsystem_views/drich_only.xml'
+elif(detector=="erich"):
+    compactFile='compact/subsystem_views/erich_only.xml'
 else:
     print('ERROR: unknown detector\n')
     sys.exit(2)
@@ -160,9 +160,9 @@ if(testNum!=7): m.write(f'/gps/ene/mono {energy}\n')
 m.write(f'/gps/position 0 0 0 cm\n')
 
 ### define envelope acceptance limits [units=cm]
-rMin = 19.0 + 15.0
-rMax = 200.0 - 10.0
-zMax = 325.0
+rMin = 8.0 + 4.0
+rMax = 93.0 - 5.0
+zMax = 210.0 - 20.0 # (keep positive, despite it's actually at negative z)
 
 ### derived attributes
 thetaMin = math.atan2(rMin,zMax)
@@ -184,18 +184,18 @@ print(sep)
 ### TESTS ############################
 
 if( testNum == 1 ):
-    m.write(f'\n# aim at +x dRICh sector\n')
-    m.write(f'/gps/direction 0.25 0.0 1.0\n')
+    m.write(f'\n# aim at +x eRICh sector\n')
+    m.write(f'/gps/direction 0.25 0.0 -1.0\n')
     m.write(f'/run/beamOn {numEvents}\n')
 
 elif( testNum == 2 ):
     m.write(f'\n# inner edge of acceptance\n')
-    m.write(f'/gps/direction {rMin} 0.0 {zMax}\n')
+    m.write(f'/gps/direction {rMin} 0.0 -{zMax}\n')
     m.write(f'/run/beamOn {numEvents}\n')
 
 elif( testNum == 3 ):
     m.write(f'\n# outer edge of acceptance\n')
-    m.write(f'/gps/direction {rMax} 0.0 {zMax}\n')
+    m.write(f'/gps/direction {rMax} 0.0 -{zMax}\n')
     m.write(f'/run/beamOn {numEvents}\n')
 
 elif( testNum == 4 ):
@@ -205,7 +205,7 @@ elif( testNum == 4 ):
         m.write(f'/vis/scene/endOfEventAction accumulate\n')
         m.write(f'/vis/scene/endOfRunAction accumulate\n')
     for r in list(np.linspace(rMin,rMax,numRad)):
-        m.write(f'/gps/direction {r} 0.0 {zMax}\n')
+        m.write(f'/gps/direction {r} 0.0 -{zMax}\n')
         m.write(f'/run/beamOn {numEvents}\n')
 
 elif( testNum == 5 ):
@@ -217,15 +217,15 @@ elif( testNum == 5 ):
         m.write(f'/vis/scene/endOfRunAction accumulate\n')
     for r in list(np.linspace(rMin,rMax,numRad)):
         for phi in list(np.linspace(0,2*math.pi,numPhi,endpoint=False)):
-            if(phi>math.pi/6 and phi<(2*math.pi-math.pi/6)): continue # restrict to one sector
+            #if(phi>math.pi/6 and phi<(2*math.pi-math.pi/6)): continue # restrict to one sector
             print(phi*180/math.pi)
             x = r*math.cos(phi)
             y = r*math.sin(phi)
-            m.write(f'/gps/direction {x} {y} {zMax}\n')
+            m.write(f'/gps/direction {x} {y} -{zMax}\n')
             m.write(f'/run/beamOn {numEvents}\n')
 
 elif( testNum == 6 ):
-    m.write(f'\n# pion spray test, drich range\n')
+    m.write(f'\n# pion spray test, erich range\n')
     if(runType=="vis"):
         m.write(f'/vis/scene/endOfEventAction accumulate\n')
     m.write(f'/gps/pos/type Point\n')
@@ -239,13 +239,13 @@ elif( testNum == 6 ):
 
 elif( testNum == 7 ):
     m.write(f'\n# momentum scan\n')
-    m.write(f'/gps/direction 0.25 0.0 1.0\n')
+    m.write(f'/gps/direction 0.25 0.0 -1.0\n')
     for en in list(np.linspace(1,60,10)):
         m.write(f'/gps/ene/mono {en} GeV\n')
         m.write(f'/run/beamOn {numEvents}\n')
 
 elif( testNum == 10 ):
-    m.write(f'\n# opticalphoton scan test, drich range\n')
+    m.write(f'\n# opticalphoton scan test, erich range\n')
     m.write(f'/vis/scene/endOfEventAction accumulate\n')
     m.write(f'/gps/pos/type Point\n')
     m.write(f'/gps/pos/radius 0.1 mm\n')

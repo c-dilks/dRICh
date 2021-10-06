@@ -62,8 +62,8 @@ int main(int argc, char** argv) {
   auto df1 = dfIn
     .Define("thrownParticles",isThrown,{"mcparticles"})
     .Define("thrownP",momentum,{"thrownParticles"})
-    .Define("numHits",numHits,{"DRICHHits"})
-    .Define("hitPos",hitPos,{"DRICHHits"})
+    .Define("numHits",numHits,{"ERICHHits"})
+    .Define("hitPos",hitPos,{"ERICHHits"})
     .Define("hitX",hitPosX,{"hitPos"})
     .Define("hitY",hitPosY,{"hitPos"})
     ;
@@ -72,12 +72,12 @@ int main(int argc, char** argv) {
 
   // actions
   auto hitPositionHist = dfFinal.Histo2D(
-      { "hitPositions","dRICh hit positions (units=cm)",
-      1000,-200,200, 1000,-200,200 },
+      { "hitPositions","eRICh hit positions (units=cm)",
+      1000,-100,100, 1000,-100,100 },
       "hitX","hitY"
       );
   auto numHitsVsThrownP = dfFinal.Histo2D(
-      { "numHitsVsThrownP","number of dRICh hits vs. thrown momentum", 
+      { "numHitsVsThrownP","number of eRICh hits vs. thrown momentum", 
       65,0,65, 100,0,200 },
       "thrownP","numHits"
       ); // TODO: cut opticalphotons (may not be needed, double check PID)
@@ -87,8 +87,8 @@ int main(int argc, char** argv) {
   TCanvas *canv;
   canv = CreateCanvas("hits",0,0,1);
   hitPositionHist->Draw("colz");
-  hitPositionHist->GetXaxis()->SetRangeUser(100,200);
-  hitPositionHist->GetYaxis()->SetRangeUser(-40,40);
+  //hitPositionHist->GetXaxis()->SetRangeUser(100,200);
+  //hitPositionHist->GetYaxis()->SetRangeUser(-40,40);
   canv->Print(outfileN+"hits.png");
   canv->Write();
   //

@@ -2,7 +2,7 @@
 
 if [ $# -lt 1 ]; then
   echo ""
-  echo "USAGE: $0 [a=athena,d=drichOnly] [c=clean(default off)]"
+  echo "USAGE: $0 [a=athena,d=drichOnly,e=erichOnly] [c=clean(default off)]"
   echo ""
   echo "EXAMPLES: $0 a c = full athena, clean build"
   echo "          $0 d   = dRICh only, not clean build"
@@ -24,6 +24,8 @@ if [ "$detector" = "a" ]; then
   compactFile="athena.xml"
 elif [ "$detector" = "d" ]; then
   compactFile="compact/subsystem_views/drich_only.xml"
+elif [ "$detector" = "e" ]; then
+  compactFile="compact/subsystem_views/erich_only.xml"
 fi
 echo "compactFile = $compactFile"
 
