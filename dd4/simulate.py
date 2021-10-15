@@ -16,6 +16,7 @@ detector = 'drich'
 particle = 'pi+'
 runType = 'run'
 numEvents = 10
+outputImageType = ''
 outputFileName = ''
 
 helpStr = f'''
@@ -53,6 +54,7 @@ helpStr = f'''
                 -n [numEvents]: number of events (usu. at each point)
                 -r: run, instead of visualize (default)
                 -v: visualize, instead of run
+                -i: [output image type] save visual (svg,pdf,ps)
                 -o [output file]: output root file name
                 -h: print help
     '''
@@ -60,7 +62,7 @@ helpStr = f'''
 if(len(sys.argv)<=1):
     print(helpStr)
     sys.exit(2)
-try: opts, args = getopt.getopt(sys.argv[1:],'t:adp:n:vro:h')
+try: opts, args = getopt.getopt(sys.argv[1:],'t:adp:n:vri:o:h')
 except getopt.GetoptError:
     print('\n\nERROR: invalid argument\n',helpStr)
     sys.exit(2)
@@ -71,6 +73,7 @@ for opt, arg in opts:
     if(opt=='-p'): particle = arg
     if(opt=='-n'): numEvents = int(arg)
     if(opt=='-r'): runType = 'run'
+    if(opt=='-i'): outputImageType = arg
     if(opt=='-o'): outputFileName = arg
     if(opt=='-v'): runType = 'vis'
     if(opt=='-h'):
@@ -112,6 +115,10 @@ else:
 ### start macro file
 workDir = os.getcwd()
 m = open(workDir+"/macro/tmp.mac",'w+')
+
+### set output file
+if outputFileName=='': outputFile = workDir+"/out/sim_"+runType+".root"
+else: outputFile = workDir+"/"+outputFileName
 
 ### common settings
 m.write(f'/control/verbose 2\n')
@@ -289,6 +296,9 @@ else:
 if(runType=="vis"):
     m.write(f'/vis/viewer/flush\n')
     m.write(f'/vis/viewer/refresh\n')
+    if outputImageType!='':
+        m.write(f'/vis/ogl/set/printFilename {outputFile}.{outputImageType}\n')
+        m.write(f'/vis/ogl/export\n')
 
 
 ### print macro and close stream
@@ -300,10 +310,6 @@ m.close()
 #########################################################
 # MACRO FILE BUILT
 
-
-### set output file
-if outputFileName=='': outputFile = workDir+"/out/sim_"+runType+".root"
-else: outputFile = workDir+"/"+outputFileName
 
 ### simulation executable and arguments
 cmd = "npsim"
