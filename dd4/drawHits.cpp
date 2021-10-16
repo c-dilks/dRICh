@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
   // actions
   auto hitPositionHist = dfFinal.Histo2D(
       { "hitPositions","dRICh hit positions (units=cm)",
-      1000,-200,200, 1000,-200,200 },
+      1000,-300,300, 1000,-300,300 },
       "hitX","hitY"
       );
   auto numHitsVsThrownP = dfFinal.Histo2D(
@@ -87,8 +87,8 @@ int main(int argc, char** argv) {
   TCanvas *canv;
   canv = CreateCanvas("hits",0,0,1);
   hitPositionHist->Draw("colz");
-  hitPositionHist->GetXaxis()->SetRangeUser(100,200);
-  hitPositionHist->GetYaxis()->SetRangeUser(-40,40);
+  hitPositionHist->GetXaxis()->SetRangeUser(130,220);
+  hitPositionHist->GetYaxis()->SetRangeUser(-50,50);
   canv->Print(outfileN+"hits.png");
   canv->Write();
   //

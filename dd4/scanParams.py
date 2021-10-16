@@ -16,9 +16,9 @@ def sep(): print('-'*40)
 def dictPrint(d): print(json.dumps(d,indent=4))
 it = {}
 i=0
-it['tuneX1'] = list(np.linspace( 0, 60, 4 ))
-it['tuneX2'] = list(np.linspace( 0, 60, 4 ))
-it['tuneZ1'] = list(np.linspace( -60, 0, 4 ))
+it['tuneX1'] = list(np.linspace( 50, 80, 4 ))
+it['tuneX2'] = list(np.linspace( 50, 80, 4 ))
+it['tuneZ1'] = list(np.linspace( -100, -40, 4 ))
 it['tuneZ2'] = list(np.linspace( -60, 0, 4 ))
 dictPrint(it)
 sep()

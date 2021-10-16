@@ -216,8 +216,8 @@ elif( testNum == 4 ):
         m.write(f'/run/beamOn {numEvents}\n')
 
 elif( testNum == 5 ):
-    numRad = 4 # number of radial steps
-    numPhi = 18 # number of phi steps, prefer odd multiple of 6 (18,30,42)
+    numRad = 6 # number of radial steps
+    numPhi = 42 # number of phi steps, prefer odd multiple of 6 (18,30,42)
     m.write(f'\n# azimuthal+radial scan test\n')
     if(runType=="vis"):
         m.write(f'/vis/scene/endOfEventAction accumulate\n')
@@ -284,7 +284,7 @@ elif( testNum == 12 ):
     for rVal in list(np.linspace(rMin,rMax,5)): # number of beams within theta acceptance
         m.write(f'/gps/ang/rot1 -{zMax} 0 {rVal}\n')
         m.write(f'/gps/pos/rot1 -{zMax} 0 {rVal}\n')
-        m.write(f'/gps/pos/halfx 8 cm\n') # parallel beam width
+        m.write(f'/gps/pos/halfx 16 cm\n') # parallel beam width
         m.write(f'/run/beamOn {numEvents}\n')
 
 else:
