@@ -152,7 +152,7 @@ if(runType=='vis'):
 
 
 ### set particle energy
-energy = '8.0 GeV'
+energy = '50.0 GeV' # max ring size for most cases
 if(particle=="opticalphoton"): energy = '3.0 eV'
 
 ### append particle info
@@ -167,9 +167,9 @@ if(testNum!=7): m.write(f'/gps/ene/mono {energy}\n')
 m.write(f'/gps/position 0 0 0 cm\n')
 
 ### define envelope acceptance limits [units=cm]
-rMin = 19.0 + 15.0
-rMax = 200.0 - 10.0
-zMax = 325.0
+rMin = 19.0 + 10.0
+rMax = 220.0 - 15.0
+zMax = 330.0
 
 ### derived attributes
 thetaMin = math.atan2(rMin,zMax)
@@ -217,7 +217,7 @@ elif( testNum == 4 ):
 
 elif( testNum == 5 ):
     numRad = 6 # number of radial steps
-    numPhi = 42 # number of phi steps, prefer odd multiple of 6 (18,30,42)
+    numPhi = 24 # number of phi steps, prefer even multiple of 6 (12,24,36)
     m.write(f'\n# azimuthal+radial scan test\n')
     if(runType=="vis"):
         m.write(f'/vis/scene/endOfEventAction accumulate\n')

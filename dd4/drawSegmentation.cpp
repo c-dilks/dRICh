@@ -7,6 +7,7 @@
 
 // ROOT
 #include "TSystem.h"
+#include "TStyle.h"
 #include "TCanvas.h"
 #include "TApplication.h"
 #include "TBox.h"
@@ -37,6 +38,9 @@ int main(int argc, char** argv) {
   // for drawing; if you change `numPx`, consider tuning these parameters
   // as well
   Long64_t dilation = 4;
+
+  gStyle->SetPalette(55);
+  gStyle->SetOptStat(0);
 
 
   // setup
@@ -180,10 +184,10 @@ int main(int argc, char** argv) {
       );
 
   // pixel hits
-  Double_t pixelXmin = dilation * 115;
-  Double_t pixelXmax = dilation * 200;
-  Double_t pixelYmin = dilation * -65;
-  Double_t pixelYmax = dilation * 65;
+  Double_t pixelXmin = dilation * 135;
+  Double_t pixelXmax = dilation * 220;
+  Double_t pixelYmin = dilation * -55;
+  Double_t pixelYmax = dilation * 55;
   auto pixelHits = dfFinal.Histo3D(
       { "pixelHits","pixel hits;x;y;sector",
         (Int_t)(pixelXmax-pixelXmin), pixelXmin, pixelXmax,
@@ -223,12 +227,12 @@ int main(int argc, char** argv) {
     pixelHitsSec[sec] = (TH2D*) pixelHits->Project3D("yx");
     pixelHitsSec[sec]->SetName(Form("pixelHits_s%d",sec));
     pixelHitsSec[sec]->SetTitle(Form("pixel hits sector %d",sec));
-    pixelHitsSec[sec]->Draw("colz");
+    pixelHitsSec[sec]->Draw("*"); // (or colz)
     for(auto box : boxList) {
       box->SetFillStyle(0);
       box->Draw("same");
     };
-    pixelHitsSec[sec]->Draw("colz same");
+    pixelHitsSec[sec]->Draw("* same"); // (or colz)
   };
 
 
