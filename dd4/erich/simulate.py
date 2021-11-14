@@ -160,7 +160,7 @@ if(testNum!=7): m.write(f'/gps/ene/mono {energy}\n')
 m.write(f'/gps/position 0 0 0 cm\n')
 
 ### define envelope acceptance limits [units=cm]
-rMin = 8.0 + 4.0
+rMin = 7.0 + 5.0
 rMax = 93.0 - 5.0
 zMax = 210.0 - 20.0 # (keep positive, despite it's actually at negative z)
 

@@ -167,13 +167,17 @@ if(testNum!=7): m.write(f'/gps/ene/mono {energy}\n')
 m.write(f'/gps/position 0 0 0 cm\n')
 
 ### define envelope acceptance limits [units=cm]
-rMin = 18.2 + 5.0
-rMax = 195.5 - 10.0
+rMin = 16.062 + 5.0
+rMax = 220.0 - 5.0
 zMax = 330.0
 
 ### derived attributes
 thetaMin = math.atan2(rMin,zMax)
 thetaMax = math.atan2(rMax,zMax)
+#thetaMin = math.radians(3.5) ##### override
+#thetaMax = math.radians(25) ##### override
+#rMin = zMax*math.tan(thetaMin) ##### override
+#rMax = zMax*math.tan(thetaMax) ##### override
 etaMin = -math.log(math.tan(0.5*thetaMin))
 etaMax = -math.log(math.tan(0.5*thetaMax))
 print('ENVELOPE\n')
@@ -214,10 +218,15 @@ elif( testNum == 4 ):
     for r in list(np.linspace(rMin,rMax,numRad)):
         m.write(f'/gps/direction {r} 0.0 {zMax}\n')
         m.write(f'/run/beamOn {numEvents}\n')
+    #m.write(f'/gps/direction {math.sin(math.radians(2.9))} 0.0 {math.cos(math.radians(2.9))}\n') ###  thetaMin limit
+    #m.write(f'/gps/direction {math.sin(math.radians(33.2))} 0.0 {math.cos(math.radians(33.2))}\n') ### thetaMax limit (aerogel)
+    #m.write(f'/gps/direction {math.sin(math.radians(35))} 0.0 {math.cos(math.radians(35))}\n') ### thetaMax limit (gas)
+    m.write(f'/run/beamOn {numEvents}\n')
+
 
 elif( testNum == 5 ):
-    numRad = 6 # number of radial steps
-    numPhi = 24 # number of phi steps, prefer even multiple of 6 (12,24,36)
+    numRad = 3 # number of radial steps
+    numPhi = 12 # number of phi steps, prefer even multiple of 6 (12,24,36)
     m.write(f'\n# azimuthal+radial scan test\n')
     if(runType=="vis"):
         m.write(f'/vis/scene/endOfEventAction accumulate\n')

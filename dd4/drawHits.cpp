@@ -87,8 +87,8 @@ int main(int argc, char** argv) {
   TCanvas *canv;
   canv = CreateCanvas("hits",0,0,1);
   hitPositionHist->Draw("colz");
-  hitPositionHist->GetXaxis()->SetRangeUser(100,200);
-  hitPositionHist->GetYaxis()->SetRangeUser(-50,50);
+  hitPositionHist->GetXaxis()->SetRangeUser(125,230);
+  hitPositionHist->GetYaxis()->SetRangeUser(-60,60);
   canv->Print(outfileN+"hits.png");
   canv->Write();
   //
