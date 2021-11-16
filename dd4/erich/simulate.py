@@ -207,6 +207,10 @@ elif( testNum == 4 ):
     for r in list(np.linspace(rMin,rMax,numRad)):
         m.write(f'/gps/direction {r} 0.0 -{zMax}\n')
         m.write(f'/run/beamOn {numEvents}\n')
+    #m.write(f'/gps/direction {math.sin(math.radians(2.4))} 0.0 -{math.cos(math.radians(2.4))}\n') ###  thetaMin limit
+    #m.write(f'/run/beamOn {numEvents}\n')
+    #m.write(f'/gps/direction {math.sin(math.radians(25.0))} 0.0 -{math.cos(math.radians(25.0))}\n') ### thetaMax limit
+    #m.write(f'/run/beamOn {numEvents}\n')
 
 elif( testNum == 5 ):
     numRad = 4 # number of radial steps

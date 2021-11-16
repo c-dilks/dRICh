@@ -220,8 +220,9 @@ elif( testNum == 4 ):
         m.write(f'/run/beamOn {numEvents}\n')
     #m.write(f'/gps/direction {math.sin(math.radians(2.9))} 0.0 {math.cos(math.radians(2.9))}\n') ###  thetaMin limit
     #m.write(f'/gps/direction {math.sin(math.radians(33.2))} 0.0 {math.cos(math.radians(33.2))}\n') ### thetaMax limit (aerogel)
+    #m.write(f'/run/beamOn {numEvents}\n')
     #m.write(f'/gps/direction {math.sin(math.radians(35))} 0.0 {math.cos(math.radians(35))}\n') ### thetaMax limit (gas)
-    m.write(f'/run/beamOn {numEvents}\n')
+    #m.write(f'/run/beamOn {numEvents}\n')
 
 
 elif( testNum == 5 ):
