@@ -86,7 +86,7 @@ void FindSphereCenter(TString treeFile="photosensors.dat") {
   Float_t size,dist,rms;
 
   // hyperparameters
-  const int NIter = 100; // number of iterations
+  const int NIter = 1000; // number of iterations
   Float_t initsize = 300; // initial lattice size
   guessx = 0; // initial guess
   guessy = 0;
